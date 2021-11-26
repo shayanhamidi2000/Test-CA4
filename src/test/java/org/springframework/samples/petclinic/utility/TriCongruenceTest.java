@@ -228,29 +228,33 @@ class TriCongruenceTest {
 
 
 	/*
-
+		for the predicate ab + cde we have the negated dnf: ~a~c + ~a~d + ~a~e + ~b~c + ~b~d + ~b~e
+		FTFTT is a TR that is a unique true point regarding the implicant ~a~c
+		this unique point will modify our test requirements and then produce Test case FTFTT.
+		This test case is not necessarily included in CUTPNFP test cases because its unique true TTFTT or FTTTT
+		can have TFFTT and FTTTF regarding b,d.So this testcase could not be included in CUTPNFP test set.
+		Then CUTPNFP does not subsume UTPC.
 	*/
 	private static boolean questionTwo(boolean a, boolean b, boolean c, boolean d, boolean e) {
-		boolean predicate = (a & b) | (c & d) | (d & e);
+		boolean predicate = (a & b) | (c & d & e);
 		return predicate;
 	}
 
 	@UniqueTruePoint(
-		predicate = "~(ab + cd + de)",
-		dnf = "~a~d + ~b~d + ~a~c~e + ~b~c~e",
-		implicant = "~a~d",
+		predicate = "~(ab + cde)",
+		dnf = "~a~c + ~a~d + ~a~e + ~b~c + ~b~d + ~b~e",
+		implicant = "~a~c",
 		valuations = {
 			@Valuation(clause = 'a', valuation = false),
 			@Valuation(clause = 'b', valuation = true),
-			@Valuation(clause = 'c', valuation = true),
-			@Valuation(clause = 'd', valuation = false),
+			@Valuation(clause = 'c', valuation = false),
+			@Valuation(clause = 'd', valuation = true),
 			@Valuation(clause = 'e', valuation = true)
 		}
 	)
 	@Test
-	public void unique_true_point_UTPC(){
-		assertFalse(questionTwo(false, true, true, false, true));
+	public void unique_true_in_point_UTPC(){
+		assertFalse(questionTwo(false, true, false, true, true));
 	}
-
 
 }
